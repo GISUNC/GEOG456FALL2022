@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>json request</title>
+</head>
+
+<body>
+ 
+</body>
+<script src="./json/test.js"></script>
+<script>
+    // Not a real link
+
+// let fileUrl = 'https://raw.githubusercontent.com/GISUNC/GEOG456FALL2022/main/tmax/json/test.json'
+let fileUrl = './json/test.json'
+var myTest 
+function reqListener () {
+  console.log(this.response );
+  myTest = this.response
+}
+
+var oReq = new XMLHttpRequest();
+oReq.addEventListener("load", reqListener);
+oReq.responseType = 'json';
+oReq.open("GET", fileUrl);
+oReq.send();
+
+
+
+</script>  
+</html>
