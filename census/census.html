@@ -4,30 +4,41 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>json request</title>
+    <title>Census Test</title>
 </head>
-
 <body>
- 
-</body>
-<script src="./json/test.js"></script>
+<form id="form" onsubmit="return false;">
+    <label for="fname">Census Key:</label>
+    <input  type="text" id="userInput" />
+    <input  type="submit" onclick="othername();" value="Submit" />
+</form>
+
 <script>
-    // Not a real link
+
+// let fileUrl
+
+function othername() {
+    var input = document.getElementById("userInput").value;
+    let fileUrl  = 'https://api.census.gov/data/2010/dec/sf1?get=H001001,NAME&for=state:01&key='+input
+    // alert(fileUrl);
+    makeRequest(fileUrl)
+}
+
 
 // let fileUrl = 'https://raw.githubusercontent.com/GISUNC/GEOG456FALL2022/main/tmax/json/test.json'
-let fileUrl = 'https://www.ncei.noaa.gov/access/services/data/v1?dataset=daily-summaries&dataTypes=TMAX&stations=USC00311677&startDate=2018-01-01&endDate=2018-12-31&includeAttributes=true&format=json'
 var myTest 
 function reqListener () {
   console.log(this.response );
   myTest = this.response
 }
 
+function makeRequest(fileUrl){
 var oReq = new XMLHttpRequest();
 oReq.addEventListener("load", reqListener);
 oReq.responseType = 'json';
 oReq.open("GET", fileUrl);
-oReq.send();
-
-
-</script>  
+oReq.send();}
+</script>
+    
+</body>
 </html>
