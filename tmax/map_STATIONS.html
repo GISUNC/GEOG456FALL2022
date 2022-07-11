@@ -23,12 +23,18 @@ crossorigin=""></script>
     maxZoom: 19,
     attribution: '© OpenStreetMap'
 }).addTo(map);
-let fileUrl = 'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations?limit=100&extent=32.0,-82.0,36.0,-78.0&format=json'
+// let fileUrl = 'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations?limit=100&extent=32.0,-82.0,36.0,-78.0&format=json'
+let fileUrl = 'https://www.ncdc.noaa.gov/cdo-web/api/v2/stations?limit=100&datacategoryid=TEMP&extent=35.8,-79.2,36.14,-78.82&startdate=2021-07-01&enddate=2022-07-9&format=json'
+// SITE QUE UTILIZE PARA ver como hacer los calls porque la explicacion de la pagina no sirve
+// if I want historical dataset add &datasetid=GHCND&
+// If I want to be sure it has rain &data datacategoryid=PRCP
+//https://www.ncdc.noaa.gov/cdo-web/datatools/findstation   abro el console.log y miro el network para ver el request que hace la pagina
 // more info https://www.ncdc.noaa.gov/cdo-web/webservices/v2
 var myTest 
 function reqListener () {
   console.log(this.response);
   myTest = this.response
+  makeMarkers(myTest.results)
 }
 
 var oReq = new XMLHttpRequest();
@@ -38,7 +44,18 @@ oReq.open("GET", fileUrl);
 oReq.setRequestHeader('token', token)
 oReq.send();
 
+function makeMarkers(res){
+    res.forEach(element => {
+        var circle = L.circle([element.latitude, element.longitude], {
+        color: 'red',
+        fillColor: '#f03',
+        fillOpacity: 0.5,
+        radius: 500}
+        ).addTo(map);
+        circle.bindPopup(element.name);
+    });
 
+}
 
     </script>
     
