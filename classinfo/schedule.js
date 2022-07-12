@@ -13,6 +13,7 @@ var GEOG456 = {
     firstDayOfClass: 'Tue Aug 16 2022',
     classesEnd: 'Wed Nov 30 2022',
     conflict:0,
+    alert:'off',
     topics:[
         {topic:'Introduction to class', 
         
@@ -33,7 +34,7 @@ var GEOG456 = {
                 video:[{title:"Get data into your script"},
                         {title:"Transform your data"},
                         {title:"Into to Plotly"}],      
-                hw:[{title:'Make several Plotly figures and post in a Page', deadline:'before 2next class', value:12, rubric:{'bar plot':1, 'scatter plot':1, 'polar plot':1, 'another complex plot ':1,'used colors that facilitate reading of graph data':4, 'graphs have titles and legend': 4,'described process and limitations for each figure':4},description:'Make a scaterplot, a barplot, a polar plot and some complex plot using Plotly and a dataset of your own interest that has a temporal component. Try to create figures that explore the how a certain process changes through time. Each figure could be a single HTML file with a Title and a short description of the limitations and benefits of the type of visualization used. Create an index.html page that has a link to each of the plots and submit the link to the index.html file in Sakai.'}
+                hw:[{title:'Make several Plotly figures and post in a Page', deadline:'before next2 class', value:12, rubric:{'bar plot':1, 'scatter plot':1, 'polar plot':1, 'another complex plot ':1,'used colors that facilitate reading of graph data':4, 'graphs have titles and legend': 4,'described process and limitations for each figure':4},description:'Make a scaterplot, a barplot, a polar plot and some complex plot using Plotly and a dataset of your own interest that has a temporal component. Try to create figures that explore the how a certain process changes through time. Each figure could be a single HTML file with a Title and a short description of the limitations and benefits of the type of visualization used. Create an index.html page that has a link to each of the plots and submit the link to the index.html file in Sakai.'}
             ]},
         
         {topic:'Introduction to Plotly', 
@@ -60,7 +61,7 @@ var GEOG456 = {
         
         {topic:'Introduction to web maps', 
                 video:[{title:"Using a slider - hurricane map"}, {title:"Using a slider and a button - US cessions map"}],  
-                hw:[{title:'Make a leaflet map with a slider or button that controls a time variable', deadline:'before 2next class', value:3, rubric:{'leaflet map displays data':1, 'the slider or button controls a time variable':4},description:'Make a leaflet map using a dataset that has a temporal component. Use a button or a slider to control how features that have a variable related to time'}]},
+                hw:[{title:'Make a leaflet map with a slider or button that controls a time variable', deadline:'before next2 class', value:3, rubric:{'leaflet map displays data':1, 'the slider or button controls a time variable':4},description:'Make a leaflet map using a dataset that has a temporal component. Use a button or a slider to control how features that have a variable related to time'}]},
         {topic:'Web map controls', 
                 video:[],  
                 hw:[]},
@@ -121,18 +122,132 @@ var GEOG456 = {
         {topic:'Final project presentation', 
                 video:[],  
                 hw:[]},
-        {topic:'Prepare Tutorial', 
+        {topic:'Prepare tutorial', 
                 video:[],  
                 hw:[]},
-        {topic:'Prepare Tutorial', 
+        {topic:'Student tutorial evaluation', 
                 video:[],  
                 hw:[]},
-        {topic:'Test Student Tutorial', 
-                video:[],  
-                hw:[]},
-        {topic:'Final Exam (Theory)', 
-                video:[],  
-                hw:[]}
-        ]
+        {topic:'Final Exam', 
+                video:'Final Exam',  
+                hw:'Final Exam'}
+        ],
+
+
+        verifyDates(hwDate, daHW){
+                if (hwDate > new Date(this.classesEnd)  && this.alert == 'on') {alert(daHW + " is after the last day")}
+                this.feriados.forEach((e)=>
+                    
+                {   
+                    feriado = new Date(e + ' ' + this.year);       
+                    if (feriado.toDateString() == hwDate.toDateString()) {
+                        if (this.alert == 'on'){alert(daHW + " has a conflict on " + feriado.toDateString())}
+                        return this.conflict = 1;
+                        }     
+                        
+                    })
+                },
+        
+            fromTuesdayToThursday(daDate) {
+                if (daDate.getDay() == 2){
+                daDate.setDate(daDate.getDate()+ 2)}
+                else {
+                daDate.setDate(daDate.getDate()+ 5)}
+            },
+            
+            fromTuesdayToThursdayTextDate(textDate){
+                var newDate = new Date(textDate)
+                
+                if (newDate.getDay() == 2){
+                        newDate.setDate(newDate.getDate()+ 2)
+                }
+                else {
+                        newDate.setDate(newDate.getDate()+ 5)}
+                return newDate
+                },
+
+
+            toDeadline(textDate, aNext) {
+                var deadDate = this.fromTuesdayToThursdayTextDate(textDate)
+                if (aNext == 'before next2 class'){var deadDate = this.fromTuesdayToThursdayTextDate(deadDate.toDateString())}
+                this.verifyDates(deadDate,'test')
+                while (this.conflict == 1){
+                        this.conflict = 0
+                        deadDate = this.fromTuesdayToThursdayTextDate(deadDate.toDateString())
+                        this.verifyDates(deadDate,'test')}
+                return 'before ' + deadDate.toDateString() + ' at 6 am'
+
+        },
+
+            makeTable(daTopic, aDate)
+                {    
+                daObj[aDate] = daTopic;
+                var numRow = 0;
+
+                if (Array.isArray(daTopic)) {
+                var numRow = daTopic.length
+                }
+                if (numRow == 0){
+                const tr = document.createElement('tr');
+                const thDay = document.createElement('td');
+                const thActivity = document.createElement('td');
+                thDay.innerHTML = aDate
+                tr.appendChild(thDay)
+                thActivity.innerHTML = daTopic;
+                tr.appendChild(thActivity);
+                daTable.appendChild(tr)}
+                if (numRow > 0){
+
+                        var tr = document.createElement('tr');
+                        const thDay = document.createElement('td');
+                        thDay.setAttribute('rowspan', numRow)
+                        thDay.innerHTML = aDate
+                        tr.appendChild(thDay)
+                        for(var i = 0; i < numRow; i++){
+                        if (i > 0){
+                                tr = document.createElement('tr');
+                        }
+                        const thActivity = document.createElement('td');
+                        thActivity.innerHTML = daTopic[i].title;
+                        tr.appendChild(thActivity);
+                        if (daTopic[i].deadline != undefined) {
+                                // aDate
+                                // console.log(daTopic[i].deadline )
+                                var deadDay = document.createElement('td');
+                                
+                                var newDate = this.toDeadline(aDate, daTopic[i].deadline )
+                                deadDay.innerHTML = newDate
+                                tr.appendChild(deadDay)
+                        }
+
+                        daTable.appendChild(tr)
+                        }
+
+                }
+                
+        },
+        
+            makeSchedule(tableID,value){ // value could be 'topics' , 'video' or 'hw'
+                daObj = { }
+                daTable = document.getElementById(tableID)
+                var daDate = new Date(this.firstDayOfClass)
+                this.topics.forEach((e,i)=>{
+                if(e[value] == 'Final Exam'){
+                    this.makeTable("Final Exam", 'Check official calendar')
+                    return}
+                if(i>0){this.fromTuesdayToThursday(daDate)}
+                this.verifyDates(daDate,e[value])
+                while (this.conflict == 1){ 
+                    this.conflict = 0;
+                    var daTopic = 'No Classes'
+                    this.makeTable(daTopic, daDate.toDateString())
+                    this.fromTuesdayToThursday(daDate)
+                    this.verifyDates(daDate,e[value])
+                }
+                if (this.conflict == 0){
+                    this.makeTable(e[value], daDate.toDateString())
+                }
+                
+            })},
 
 }
